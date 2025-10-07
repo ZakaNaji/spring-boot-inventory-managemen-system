@@ -26,18 +26,27 @@ public class Transaction {
     @Column(scale = 4, precision = 19, nullable = false)
     private BigDecimal totalPrice;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private TransactionStatus transactionStatus;
 
     private String description;
     private String note;
 
     @Column(nullable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    void prePersist() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        createdAt = LocalDateTime.now();
+    }
     //Relationships:
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

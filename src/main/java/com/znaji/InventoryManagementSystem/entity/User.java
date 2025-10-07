@@ -25,15 +25,19 @@ public class User {
 
     private String phoneNumber;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    void prePersist() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+    }
 
     //Relationships:
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 

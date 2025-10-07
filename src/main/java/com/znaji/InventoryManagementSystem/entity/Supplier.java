@@ -19,11 +19,10 @@ public class Supplier {
     private String name;
 
     private String contactInfo;
-    private String Address;
+    private String address;
 
     //Relationship:
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
@@ -47,7 +46,7 @@ public class Supplier {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
-                ", Address='" + Address + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 
