@@ -43,6 +43,10 @@ public class Transaction {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
     @Override
     public String toString() {
         return "Transaction{" +
