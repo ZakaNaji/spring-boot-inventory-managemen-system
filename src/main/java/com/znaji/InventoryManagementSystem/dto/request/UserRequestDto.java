@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record UserRequest(
+import java.io.Serializable;
+
+public record UserRequestDto(
         @NotBlank(message = "email can't be empty")
         @Email(message = "Not a valid email")
         String email,
@@ -16,5 +18,7 @@ public record UserRequest(
         @Pattern(regexp = "\\d{10}", message = "Invalid phone number")
         String phoneNumber,
         @NotNull
-        UserRole role) {
+        UserRole role,
+        @NotBlank
+        String name) implements Serializable {
 }
