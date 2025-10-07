@@ -2,13 +2,11 @@ package com.znaji.InventoryManagementSystem.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,6 +46,24 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions;
+
+    public List<Transaction> getTransactions() {
+        return List.copyOf(transactions);
+    }
+
+    public void addTransaction(Transaction t) {
+        transactions.add(t);
+        t.setProduct(this);
+    }
+
+    public void removeTransaction(Transaction t) {
+        transactions.remove(t);
+        t.setProduct(null);
+    }
 
     @Override
     public String toString() {
