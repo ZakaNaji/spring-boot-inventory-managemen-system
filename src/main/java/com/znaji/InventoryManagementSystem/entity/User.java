@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -30,4 +31,35 @@ public class User {
 
     @Column(nullable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "createdAt=" + createdAt +
+                ", role=" + role +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null ) {
+            return false;
+        }
+
+        if (o == this) {
+            return true;
+        }
+
+        if (! (o instanceof User u)) {
+            return false;
+        }
+        return u.getEmail().equals(this.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.email);
+    }
 }
