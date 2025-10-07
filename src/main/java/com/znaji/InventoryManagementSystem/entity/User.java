@@ -1,12 +1,11 @@
 package com.znaji.InventoryManagementSystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -31,6 +30,26 @@ public class User {
 
     @Column(nullable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    //Relationships:
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public List<Transaction> getTransactions() {
+        return List.copyOf(transactions);
+    }
+
+    private void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        transaction.setUser(this);
+    }
+
+    private void removeTransaction(Transaction transaction) {
+        transactions.remove(transaction);
+        transaction.setUser(null);
+    }
 
     @Override
     public String toString() {

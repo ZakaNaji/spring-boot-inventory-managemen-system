@@ -38,6 +38,11 @@ public class Transaction {
     private final LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt;
 
+    //Relationships:
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Override
     public String toString() {
         return "Transaction{" +
