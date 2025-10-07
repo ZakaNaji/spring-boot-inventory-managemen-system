@@ -1,13 +1,10 @@
 package com.znaji.InventoryManagementSystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +17,25 @@ public class Category {
     private Long id;
 
     private String name;
+
+    //Relationship:
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
+
+    public List<Product> getProducts() {
+        return List.copyOf(products);
+    }
+
+    public void addProduct(Product p) {
+        products.add(p);
+        p.setCategory(this);
+    }
+
+    public void removeProduct(Product p) {
+        products.remove(p);
+        p.setCategory(null);
+    }
 
     @Override
     public String toString() {
