@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record UserRequest(
-        @NotBlank(message = "Name can't be empty")
-        String name,
         @NotBlank(message = "email can't be empty")
         @Email(message = "Not a valid email")
         String email,
