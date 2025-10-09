@@ -2,17 +2,26 @@ package com.znaji.InventoryManagementSystem.service.impl;
 
 import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
+import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
 import com.znaji.InventoryManagementSystem.entity.User;
 import com.znaji.InventoryManagementSystem.exception.BusinessException;
+import com.znaji.InventoryManagementSystem.exception.NotFoundException;
 import com.znaji.InventoryManagementSystem.repository.UserRepository;
+import com.znaji.InventoryManagementSystem.security.AuthUser;
 import com.znaji.InventoryManagementSystem.service.UserService;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -24,6 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Response registerUser(RegisterRequest request) {
         String email = request.email();
         Optional<User> existingUser = userRepository.findByEmailIgnoreCase(email);
@@ -42,5 +52,24 @@ public class UserServiceImpl implements UserService {
                 .status(HttpStatus.CREATED.value())
                 .message(String.format("User with email %s was created.", email))
                 .build();
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAllBy(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    @Override
+    public UserResponse getCurrentLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findUserByEmail(authentication.getName())
+                .orElseThrow(() -> new NotFoundException("No logged in user currently"));
+
+    }
+
+    @Override
+    public UserResponse getUserById(Long id) {
+        return userRepository.findUserById(id)
+                .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
     }
 }
