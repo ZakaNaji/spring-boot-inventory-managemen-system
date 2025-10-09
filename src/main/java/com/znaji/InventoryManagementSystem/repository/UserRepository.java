@@ -1,6 +1,7 @@
 package com.znaji.InventoryManagementSystem.repository;
 
 import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
+import com.znaji.InventoryManagementSystem.dto.response.UserWithTransactionsResponse;
 import com.znaji.InventoryManagementSystem.entity.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<UserResponse> findUserById(Long id);
 
   Optional<User> findById(Long id);
+
+  Optional<UserWithTransactionsResponse> findUserWithTransactionByEmail(String email);
 }

@@ -4,6 +4,7 @@ import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.request.UserRequest;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
 import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
+import com.znaji.InventoryManagementSystem.dto.response.UserWithTransactionsResponse;
 import com.znaji.InventoryManagementSystem.entity.User;
 import com.znaji.InventoryManagementSystem.exception.BusinessException;
 import com.znaji.InventoryManagementSystem.exception.NotFoundException;
@@ -99,6 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Response deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
@@ -109,5 +111,11 @@ public class UserServiceImpl implements UserService {
                 .status(HttpStatus.OK.value())
                 .message("User deleted.")
                 .build();
+    }
+
+    @Override
+    public UserWithTransactionsResponse getUserTransactions(String email) {
+        return userRepository.findUserWithTransactionByEmail(email)
+                .orElseThrow(() -> new NotFoundException("No user found with email: " + email));
     }
 }

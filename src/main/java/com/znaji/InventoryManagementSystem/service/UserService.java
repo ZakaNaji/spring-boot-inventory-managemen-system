@@ -4,6 +4,7 @@ import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.request.UserRequest;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
 import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
+import com.znaji.InventoryManagementSystem.dto.response.UserWithTransactionsResponse;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface UserService {
     Response updateUser(Long id, UserRequest request);
 
     Response deleteUser(Long id);
+
+    UserWithTransactionsResponse getUserTransactions(String email);
 }
