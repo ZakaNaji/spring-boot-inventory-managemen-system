@@ -12,6 +12,7 @@ import java.util.Objects;
 @Table(name = "users")
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
+@Builder
 public class User {
 
     @Id
