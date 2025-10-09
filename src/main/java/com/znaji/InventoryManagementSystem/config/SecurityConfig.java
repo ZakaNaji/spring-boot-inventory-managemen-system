@@ -26,6 +26,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint customAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AccessDeniedHandler customAccessDeniedHandler;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
@@ -33,7 +34,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler));
         http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(AbstractHttpConfigurer::disable);
+        http.cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource));
         http.sessionManagement(smConfig -> smConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authConfig -> authConfig
                 .requestMatchers("/api/auth/**").permitAll()
