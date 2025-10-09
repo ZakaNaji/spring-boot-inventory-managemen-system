@@ -17,4 +17,6 @@ public interface UserService {
     UserResponse getUserById(Long id);
 
     Response updateUser(Long id, UserRequest request);
+
+    Response deleteUser(Long id);
 }

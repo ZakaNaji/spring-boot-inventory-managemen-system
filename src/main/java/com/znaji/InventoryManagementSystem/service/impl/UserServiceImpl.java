@@ -97,4 +97,17 @@ public class UserServiceImpl implements UserService {
                 .message("User updated.")
                 .build();
     }
+
+    @Override
+    public Response deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
+
+        userRepository.deleteById(id);
+
+        return Response.builder()
+                .status(HttpStatus.OK.value())
+                .message("User deleted.")
+                .build();
+    }
 }
