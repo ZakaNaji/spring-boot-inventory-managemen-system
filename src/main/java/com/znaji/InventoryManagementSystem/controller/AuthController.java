@@ -9,6 +9,7 @@ import com.znaji.InventoryManagementSystem.security.JwtUtils;
 import com.znaji.InventoryManagementSystem.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public Response register(@Valid @RequestBody RegisterRequest request) {
         return userService.registerUser(request);
     }
