@@ -1,7 +1,9 @@
 package com.znaji.InventoryManagementSystem.service.impl;
 
+import com.znaji.InventoryManagementSystem.dto.request.LoginRequest;
 import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.request.UserRequest;
+import com.znaji.InventoryManagementSystem.dto.response.AuthResponse;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
 import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
 import com.znaji.InventoryManagementSystem.dto.response.UserWithTransactionsResponse;
@@ -10,10 +12,13 @@ import com.znaji.InventoryManagementSystem.exception.BusinessException;
 import com.znaji.InventoryManagementSystem.exception.NotFoundException;
 import com.znaji.InventoryManagementSystem.repository.UserRepository;
 import com.znaji.InventoryManagementSystem.security.AuthUser;
+import com.znaji.InventoryManagementSystem.security.JwtUtils;
 import com.znaji.InventoryManagementSystem.service.UserService;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,10 +34,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -55,6 +64,18 @@ public class UserServiceImpl implements UserService {
                 .status(HttpStatus.CREATED.value())
                 .message(String.format("User with email %s was created.", email))
                 .build();
+    }
+
+    @Override
+    public AuthResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.email(),
+                loginRequest.password()
+        ));
+
+        AuthUser principal = (AuthUser) authenticate.getPrincipal();
+        String token = jwtUtils.generateToken(principal);
+        return new AuthResponse(token);
     }
 
     @Override

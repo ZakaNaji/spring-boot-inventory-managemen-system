@@ -1,9 +1,13 @@
 package com.znaji.InventoryManagementSystem.controller;
 
-import com.znaji.InventoryManagementSystem.dto.request.LoginRequestDto;
+import com.znaji.InventoryManagementSystem.dto.request.LoginRequest;
+import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.response.AuthResponse;
+import com.znaji.InventoryManagementSystem.dto.response.Response;
 import com.znaji.InventoryManagementSystem.security.AuthUser;
 import com.znaji.InventoryManagementSystem.security.JwtUtils;
+import com.znaji.InventoryManagementSystem.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +24,15 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final UserService userService;
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequestDto loginRequest) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.email(),
-                loginRequest.password()
-        ));
+    public AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+        return userService.login(loginRequest);
+    }
 
-        AuthUser principal = (AuthUser) authenticate.getPrincipal();
-        String token = jwtUtils.generateToken(principal);
-        return new AuthResponse(token);
+    @PostMapping("/register")
+    public Response register(@Valid @RequestBody RegisterRequest request) {
+        return userService.registerUser(request);
     }
 }
