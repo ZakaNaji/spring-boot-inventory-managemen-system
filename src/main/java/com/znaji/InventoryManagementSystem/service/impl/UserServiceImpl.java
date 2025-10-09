@@ -135,8 +135,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserWithTransactionsResponse getUserTransactions(String email) {
-        return userRepository.findUserWithTransactionByEmail(email)
-                .orElseThrow(() -> new NotFoundException("No user found with email: " + email));
+    public UserWithTransactionsResponse getUserTransactions(Long id) {
+        return userRepository.findUserWithTransactionById(id)
+                .orElseThrow(() -> new NotFoundException("No user found with id: " + id));
     }
 }

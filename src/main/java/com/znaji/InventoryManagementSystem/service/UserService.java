@@ -1,7 +1,6 @@
 package com.znaji.InventoryManagementSystem.service;
 
 import com.znaji.InventoryManagementSystem.dto.request.LoginRequest;
-import com.znaji.InventoryManagementSystem.dto.request.LoginRequestDto;
 import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.request.UserRequest;
 import com.znaji.InventoryManagementSystem.dto.response.AuthResponse;
@@ -26,5 +25,5 @@ public interface UserService {
 
     Response deleteUser(Long id);
 
-    UserWithTransactionsResponse getUserTransactions(String email);
+    UserWithTransactionsResponse getUserTransactions(Long id);
 }
