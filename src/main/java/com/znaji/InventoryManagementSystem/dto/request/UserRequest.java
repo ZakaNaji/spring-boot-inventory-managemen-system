@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.io.Serializable;
 
-public record UserRequestDto(
+public record UserRequest(
         @NotBlank(message = "email can't be empty")
         @Email(message = "Not a valid email")
         String email,

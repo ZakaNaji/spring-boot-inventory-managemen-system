@@ -1,6 +1,7 @@
 package com.znaji.InventoryManagementSystem.service.impl;
 
 import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
+import com.znaji.InventoryManagementSystem.dto.request.UserRequest;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
 import com.znaji.InventoryManagementSystem.dto.response.UserResponse;
 import com.znaji.InventoryManagementSystem.entity.User;
@@ -77,5 +78,23 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserById(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
+    }
+
+    @Override
+    public Response updateUser(Long id, UserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
+
+        //set new values:
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setRole(request.role());
+        user.setPhoneNumber(request.phoneNumber());
+
+        userRepository.save(user);
+        return Response.builder()
+                .status(HttpStatus.OK.value())
+                .message("User updated.")
+                .build();
     }
 }
