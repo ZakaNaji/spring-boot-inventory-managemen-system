@@ -14,6 +14,12 @@ import java.io.IOException;
 
 @Component
 public class CustomAccessDeniedhandler implements AccessDeniedHandler {
+    private final ObjectMapper objectMapper;
+
+    public CustomAccessDeniedhandler(ObjectMapper objectMapper, ObjectMapper objectMapper1) {
+        this.objectMapper = objectMapper1;
+    }
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         ErrorResponse errorResponse = ErrorResponse.of(
@@ -25,7 +31,6 @@ public class CustomAccessDeniedhandler implements AccessDeniedHandler {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-
-        new ObjectMapper().writeValue(response.getOutputStream(), errorResponse);
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }
