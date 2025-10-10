@@ -57,7 +57,8 @@ public class UserServiceImpl implements UserService {
                 .name(request.name())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(request.userRole())
+                .phoneNumber(request.phoneNumber())
+                .role(request.role())
                 .build();
         userRepository.save(newUser);
         return Response.builder()
@@ -103,15 +104,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Response updateUser(Long id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("no user found with id: " + id));
 
-        //set new values:
-        user.setName(request.name());
-        user.setEmail(request.email());
-        user.setRole(request.role());
-        user.setPhoneNumber(request.phoneNumber());
+        // set new values only if present
+        setUpdatedFields(request, user);
 
         userRepository.save(user);
         return Response.builder()
@@ -138,5 +137,20 @@ public class UserServiceImpl implements UserService {
     public UserWithTransactionsResponse getUserTransactions(Long id) {
         return userRepository.findUserWithTransactionById(id)
                 .orElseThrow(() -> new NotFoundException("No user found with id: " + id));
+    }
+
+    private void setUpdatedFields(UserRequest request, User user) {
+        if (request.name() != null && !request.name().isEmpty()) {
+            user.setName(request.name());
+        }
+        if (request.email() != null && !request.email().isEmpty()) {
+            user.setEmail(request.email());
+        }
+        if (request.role() != null) {
+            user.setRole(request.role());
+        }
+        if (request.phoneNumber() != null && !request.phoneNumber().isEmpty()) {
+            user.setPhoneNumber(request.phoneNumber());
+        }
     }
 }
