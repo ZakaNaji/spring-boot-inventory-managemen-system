@@ -9,5 +9,5 @@ import java.io.Serializable;
 /**
  * DTO for {@link Category}
  */
-public record CategoryRequestDto(@NotNull @NotBlank String name) implements Serializable {
+public record CategoryRequest(@NotNull @NotBlank String name) implements Serializable {
 }
