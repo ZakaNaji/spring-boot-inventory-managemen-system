@@ -4,19 +4,13 @@ import com.znaji.InventoryManagementSystem.dto.request.LoginRequest;
 import com.znaji.InventoryManagementSystem.dto.request.RegisterRequest;
 import com.znaji.InventoryManagementSystem.dto.response.AuthResponse;
 import com.znaji.InventoryManagementSystem.dto.response.Response;
-import com.znaji.InventoryManagementSystem.security.AuthUser;
 import com.znaji.InventoryManagementSystem.security.JwtUtils;
 import com.znaji.InventoryManagementSystem.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
     public Response register(@Valid @RequestBody RegisterRequest request) {
         return userService.registerUser(request);
     }
