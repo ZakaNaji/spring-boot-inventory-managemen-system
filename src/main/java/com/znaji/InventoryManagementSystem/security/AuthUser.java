@@ -17,11 +17,12 @@ import java.util.List;
 public class AuthUser implements UserDetails {
 
     private final User user;
+    private static final String  DEFAULT_ROLE_PREFIX = "ROLE_";
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(DEFAULT_ROLE_PREFIX + user.getRole().name()));
     }
 
     @Override
